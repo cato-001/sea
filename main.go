@@ -8,8 +8,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-var SelectedLink = ""
-
 func main() {
 	links, err := Query(strings.Join(os.Args[1:], " "))
 	if err != nil {
@@ -28,7 +26,5 @@ func main() {
 		fmt.Println("error while showing tui:\n", err)
 		return
 	}
-
-	fmt.Println(SelectedLink)
 }
 

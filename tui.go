@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os/exec"
+
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -41,8 +43,11 @@ func (m *DuckDuckGoModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.List.CursorUp()
 		case "enter":
 			index := m.List.Cursor()
-			SelectedLink = m.Links[index].Link()
-			cmd = tea.Batch(tea.ClearScreen, tea.Quit)
+			link := m.Links[index].Link()
+			cmd = tea.Batch(
+				func() tea.Msg { return openFirefoxLink(link); },
+				tea.ClearScreen,
+				tea.Quit)
 		}
 	case tea.WindowSizeMsg:
 		m.List.SetSize(msg.Width, msg.Height / 2)
@@ -53,4 +58,8 @@ func (m *DuckDuckGoModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *DuckDuckGoModel) View() string {
 	return m.List.View()
+}
+
+func openFirefoxLink(link string) error {
+	return exec.Command("/mnt/c/Programme/Mozilla Firefox/firefox.exe", link).Run()
 }
